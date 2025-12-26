@@ -1,0 +1,27 @@
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfvars
+.terraform.lock.hcl
+
+# Node.js
+node_modules/
+dist/
+build/
+npm-debug.log
+
+# Environment Variables
+.env
+.env.local
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.DS_Store
+
+# Azure/Docker artifacts
+*.azurecr.io
+backend-deploy.yaml
+frontend-deploy.yaml

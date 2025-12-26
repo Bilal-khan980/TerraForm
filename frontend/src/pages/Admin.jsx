@@ -21,7 +21,7 @@ const Admin = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      await axios.post('http://localhost:5000/api/products', formData);
+      await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/products`, formData);
       setMessage('Product added successfully!');
       setFormData({ name: '', description: '', price: '', category: '', imageUrl: '' });
     } catch (err) {
