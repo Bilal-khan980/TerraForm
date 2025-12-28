@@ -20,11 +20,34 @@ output "acr_password" {
   sensitive = true
 }
 
-output "connection_string" {
-    value = azurerm_cosmosdb_account.db.primary_mongodb_connection_string
-    sensitive = true
-}
-
 output "unique_id" {
   value = random_integer.ri.result
+}
+
+output "region" {
+  value = var.region
+}
+
+output "backend_cpu" {
+  value = var.backend_cpu
+}
+
+output "backend_memory" {
+  value = var.backend_memory
+}
+
+output "backend_port" {
+  value = var.backend_port
+}
+
+output "frontend_cpu" {
+  value = var.frontend_cpu
+}
+
+output "frontend_memory" {
+  value = var.frontend_memory
+}
+
+output "frontend_port" {
+  value = var.frontend_port
 }

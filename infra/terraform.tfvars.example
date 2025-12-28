@@ -1,0 +1,20 @@
+# Terraform Configuration Values
+# Copy this file to terraform.tfvars and customize for your deployment
+
+# Azure Configuration
+region             = "northeurope"
+project_name       = "techquest"
+acr_sku           = "Basic"
+
+# Note: Database is MongoDB Atlas (configured in .env file)
+# No database resources are provisioned in Azure
+
+# Container Resources
+backend_cpu     = 1.0
+backend_memory  = 1.5
+backend_port    = 5000
+
+frontend_cpu    = 1.0
+frontend_memory = 1.5
+frontend_port   = 80
+

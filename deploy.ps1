@@ -4,10 +4,27 @@ Write-Host "==========================================" -ForegroundColor Green
 Write-Host "   MASTER DEPLOYMENT SCRIPT (ACI)" -ForegroundColor Green
 Write-Host "==========================================" -ForegroundColor Green
 
-# --- CONFIGURATION (EDIT THESE IF NEEDED) ---
-$ATLAS_MONGO_URI = "mongodb+srv://Bilalkhan:Pakistan@cluster1.moct8fi.mongodb.net/TerraForm"
-$REGION = "northeurope"
-# --------------------------------------------
+# Load environment variables from .env file
+Write-Host "`n[0/5] Loading Environment Variables..." -ForegroundColor Cyan
+if (-Not (Test-Path ".env")) {
+    Write-Host "ERROR: .env file not found!" -ForegroundColor Red
+    Write-Host "Please copy .env.example to .env and fill in your values." -ForegroundColor Yellow
+    exit 1
+}
+
+Get-Content ".env" | ForEach-Object {
+    if ($_ -match '^\s*([^#][^=]+)\s*=\s*(.*)$') {
+        $name = $matches[1].Trim()
+        $value = $matches[2].Trim()
+        Set-Item -Path "env:$name" -Value $value
+    }
+}
+
+# Validate required environment variables
+if (-Not $env:MONGO_URI) {
+    Write-Host "ERROR: MONGO_URI not set in .env file!" -ForegroundColor Red
+    exit 1
+}
 
 # 1. Terraform Infrastructure
 Write-Host "`n[1/5] Provisioning Base Infrastructure..." -ForegroundColor Cyan
@@ -16,19 +33,26 @@ terraform init -input=false
 terraform apply -auto-approve -input=false
 if ($LASTEXITCODE -ne 0) { throw "Terraform provisioning failed." }
 
-# 2. Extract Outputs
-Write-Host "`n[2/5] Reading Configuration..." -ForegroundColor Cyan
+# 2. Extract Outputs from Terraform
+Write-Host "`n[2/5] Reading Configuration from Terraform..." -ForegroundColor Cyan
 $acr_login_server = terraform output -raw acr_login_server
 $acr_username = terraform output -raw acr_username
 $acr_password = terraform output -raw acr_password
 $rg_name = terraform output -raw resource_group_name
 $unique_id = terraform output -raw unique_id
+$region = terraform output -raw region
+$backend_cpu = terraform output -raw backend_cpu
+$backend_memory = terraform output -raw backend_memory
+$backend_port = terraform output -raw backend_port
+$frontend_cpu = terraform output -raw frontend_cpu
+$frontend_memory = terraform output -raw frontend_memory
+$frontend_port = terraform output -raw frontend_port
 Set-Location ".."
 
 # Derive Container Names
 $backend_name = "techquest-api-$unique_id"
 $frontend_name = "techquest-web-$unique_id"
-$backend_url = "http://${backend_name}.${REGION}.azurecontainer.io:5000"
+$backend_url = "http://${backend_name}.${region}.azurecontainer.io:${backend_port}"
 
 # 3. Build & Push Images
 Write-Host "`n[3/5] Building & Pushing Docker Images..." -ForegroundColor Cyan
@@ -50,7 +74,7 @@ Set-Location ".."
 Write-Host "`n[4/5] Deploying Backend Container..." -ForegroundColor Cyan
 $backend_yaml = @"
 apiVersion: 2019-12-01
-location: $REGION
+location: $region
 name: $backend_name
 properties:
   containers:
@@ -59,21 +83,21 @@ properties:
       image: $acr_login_server/backend:latest
       resources:
         requests:
-          cpu: 1.0
-          memoryInGB: 1.5
+          cpu: $backend_cpu
+          memoryInGB: $backend_memory
       ports:
-      - port: 5000
+      - port: $backend_port
       environmentVariables:
       - name: PORT
-        value: '5000'
+        value: '$backend_port'
       - name: MONGO_URI
-        value: '$ATLAS_MONGO_URI'
+        value: '$env:MONGO_URI'
   osType: Linux
   ipAddress:
     type: Public
     ports:
     - protocol: tcp
-      port: 5000
+      port: $backend_port
     dnsNameLabel: $backend_name
   imageRegistryCredentials:
   - server: $acr_login_server
@@ -88,7 +112,7 @@ az container create --resource-group $rg_name --file backend-deploy.yaml
 Write-Host "`n[5/5] Deploying Frontend Container..." -ForegroundColor Cyan
 $frontend_yaml = @"
 apiVersion: 2019-12-01
-location: $REGION
+location: $region
 name: $frontend_name
 properties:
   containers:
@@ -97,16 +121,16 @@ properties:
       image: $acr_login_server/frontend:latest
       resources:
         requests:
-          cpu: 1.0
-          memoryInGB: 1.5
+          cpu: $frontend_cpu
+          memoryInGB: $frontend_memory
       ports:
-      - port: 80
+      - port: $frontend_port
   osType: Linux
   ipAddress:
     type: Public
     ports:
     - protocol: tcp
-      port: 80
+      port: $frontend_port
     dnsNameLabel: $frontend_name
   imageRegistryCredentials:
   - server: $acr_login_server
@@ -124,5 +148,5 @@ Remove-Item -Path "frontend-deploy.yaml" -ErrorAction SilentlyContinue
 Write-Host "`n==========================================" -ForegroundColor Green
 Write-Host "   DEPLOYMENT SUCCESSFUL!" -ForegroundColor Green
 Write-Host "==========================================" -ForegroundColor Green
-Write-Host "Frontend: http://${frontend_name}.${REGION}.azurecontainer.io" -ForegroundColor Yellow
+Write-Host "Frontend: http://${frontend_name}.${region}.azurecontainer.io" -ForegroundColor Yellow
 Write-Host "Backend:  $backend_url" -ForegroundColor Yellow
