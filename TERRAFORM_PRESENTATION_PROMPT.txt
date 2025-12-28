@@ -1,0 +1,540 @@
+CREATE A 20-SLIDE PRESENTATION ABOUT TERRAFORM WITH THE FOLLOWING CONTENT:
+
+===================================================================================
+SLIDE 1: TITLE SLIDE
+===================================================================================
+Title: "Infrastructure as Code with Terraform"
+Subtitle: "Building Cloud Infrastructure the Modern Way"
+
+VISUAL DESCRIPTION:
+- Modern tech background with cloud icons
+- Terraform logo prominently displayed
+- Azure cloud logo
+- Clean, professional design with gradient blue/purple colors
+
+===================================================================================
+SLIDE 2: THE PROBLEM - BEFORE TERRAFORM
+===================================================================================
+Title: "The Old Way: Manual Infrastructure Management"
+
+CONTENT:
+• Manual server setup through web portals (Azure Portal, AWS Console)
+• Click, click, click... hours of repetitive work
+• Different steps for Dev, Staging, Production
+• Human errors and inconsistencies
+• No version control for infrastructure
+• "It works on my machine" syndrome
+
+VISUAL DESCRIPTION:
+- Split screen showing:
+  - Left side: Person clicking frantically in Azure Portal (stressed expression)
+  - Right side: Multiple browser tabs open, sticky notes everywhere
+- Red X marks and error symbols
+- Worried developer with messy desk
+- Clock showing time wasting
+
+===================================================================================
+SLIDE 3: THE CHALLENGES
+===================================================================================
+Title: "Pain Points of Manual Infrastructure"
+
+CONTENT:
+❌ Time-Consuming: Hours to set up one environment
+❌ Error-Prone: One wrong click = disaster
+❌ Not Repeatable: Can't easily recreate setup
+❌ No History: Can't track who changed what
+❌ Documentation Outdated: Wiki pages never match reality
+❌ Team Bottleneck: Only senior devs know the setup
+
+VISUAL DESCRIPTION:
+- Grid of 6 icons representing each pain point
+- Red exclamation marks and warning symbols
+- Frustrated team members around a server
+- Calendar showing wasted weeks
+- Broken documentation papers
+
+===================================================================================
+SLIDE 4: THE SOLUTION - ENTER TERRAFORM
+===================================================================================
+Title: "Terraform: Infrastructure as Code"
+
+CONTENT:
+What is Terraform?
+• Write infrastructure in code (like programming)
+• Version control your cloud resources
+• Automate infrastructure creation
+• One command to deploy everything
+• Works with Azure, AWS, Google Cloud, and 1000+ providers
+
+By HashiCorp - Released in 2014
+
+VISUAL DESCRIPTION:
+- Terraform logo in center
+- Code editor showing Terraform code (.tf files)
+- Connected to multiple cloud providers (Azure, AWS, GCP logos)
+- Modern, clean, hero-style image
+- HashiCorp logo in corner
+
+===================================================================================
+SLIDE 5: WHY TERRAFORM WAS NEEDED
+===================================================================================
+Title: "The Need for Infrastructure as Code"
+
+CONTENT:
+🎯 Automation: Deploy in minutes, not hours
+🎯 Consistency: Same setup every time
+🎯 Version Control: Track changes with Git
+🎯 Collaboration: Teams work together
+🎯 Repeatability: Dev = Staging = Production
+🎯 Documentation: Code IS the documentation
+
+"Treat infrastructure like software code"
+
+VISUAL DESCRIPTION:
+- Before/After comparison
+- Left: Chaos, manual work, errors
+- Right: Organized, automated, smooth
+- Arrows showing transformation
+- Green checkmarks on right side
+- Timeline showing evolution from 2010 → 2014 → 2024
+
+===================================================================================
+SLIDE 6: HOW TERRAFORM WORKS
+===================================================================================
+Title: "Terraform Workflow in 3 Steps"
+
+CONTENT:
+1️⃣ WRITE
+   Define infrastructure in .tf files
+   Example: Azure Resource Group, Containers, Databases
+
+2️⃣ PLAN
+   Terraform shows what will be created/changed
+   Review before applying
+
+3️⃣ APPLY
+   Terraform creates actual resources in cloud
+   Manages state automatically
+
+VISUAL DESCRIPTION:
+- Three-step flow diagram
+- Step 1: Code editor icon with .tf file
+- Step 2: Checklist/preview icon
+- Step 3: Cloud with resources appearing
+- Arrows connecting each step
+- Terminal window showing commands
+
+===================================================================================
+SLIDE 7: TERRAFORM VS TRADITIONAL APPROACH
+===================================================================================
+Title: "Comparison: Traditional vs Terraform"
+
+CONTENT:
+TRADITIONAL WAY:
+• Login to Azure Portal
+• Click 20+ times per resource
+• Screenshot for documentation
+• Repeat for each environment
+• Takes: 2-3 hours
+
+TERRAFORM WAY:
+• Write code once
+• Run: terraform apply
+• Automatic documentation
+• Deploy to any environment
+• Takes: 5 minutes
+
+VISUAL DESCRIPTION:
+- Side-by-side comparison table
+- Left column: Red/Orange (Traditional)
+- Right column: Green (Terraform)
+- Clock icons showing time difference
+- Checkmark vs X mark for each point
+
+===================================================================================
+SLIDE 8: TERRAFORM ARCHITECTURE
+===================================================================================
+Title: "How Terraform Connects to Cloud"
+
+CONTENT:
+Developer → Terraform → Cloud Provider
+
+Components:
+• Terraform Files (.tf): Your infrastructure code
+• Terraform CLI: Command-line tool
+• Provider: Azure/AWS/GCP connector
+• State File: Current infrastructure status
+• Cloud Resources: Actual servers, databases, etc.
+
+VISUAL DESCRIPTION:
+- Flowchart diagram:
+  - Developer laptop (with .tf files)
+  - Arrow to Terraform logo
+  - Arrow to Cloud provider (Azure logo)
+  - Arrow to actual resources (servers, databases)
+- State file shown as database icon
+- Bidirectional arrows showing communication
+
+===================================================================================
+SLIDE 9: OUR PROJECT STRUCTURE
+===================================================================================
+Title: "TechQuest Project - Folder Structure"
+
+CONTENT:
+TechQuest/
+├── 📂 infra/              # Terraform files
+│   ├── main.tf            # Resources definition
+│   ├── variables.tf       # Configurable values
+│   ├── outputs.tf         # Export values
+│   └── provider.tf        # Azure connection
+├── 📂 backend/            # Node.js API
+├── 📂 frontend/           # React app
+├── 📄 deploy.ps1          # Deployment script
+└── 📄 .env                # Secrets
+
+VISUAL DESCRIPTION:
+- Clean folder tree diagram
+- Color-coded folders (blue for infra, green for apps)
+- File icons next to each item
+- Arrows pointing to key files
+- Modern file explorer style
+
+===================================================================================
+SLIDE 10: TERRAFORM FILES EXPLAINED
+===================================================================================
+Title: "Understanding Terraform Files"
+
+CONTENT:
+main.tf
+• Defines WHAT to create (servers, databases, networks)
+• The actual infrastructure blueprint
+
+variables.tf
+• Defines configurable options (region, size, names)
+• Makes code reusable
+
+outputs.tf
+• Exports important info (URLs, IDs, passwords)
+• Used by deployment scripts
+
+provider.tf
+• Connects to Azure/AWS/GCP
+• Handles authentication
+
+VISUAL DESCRIPTION:
+- Four file icons arranged in a grid
+- Each with icon, name, and key symbol
+- Visual representation of what each does:
+  - main.tf: Building blocks
+  - variables.tf: Settings/sliders
+  - outputs.tf: Export/share icon
+  - provider.tf: Cloud connection
+
+===================================================================================
+SLIDE 11: TERRAFORM STATE - THE BRAIN
+===================================================================================
+Title: "State File: Terraform's Memory"
+
+CONTENT:
+What is State?
+• Terraform's record of created resources
+• Tracks current vs desired configuration
+• Stores resource IDs, dependencies, metadata
+
+terraform.tfstate
+├── Resource IDs
+├── Current values
+├── Dependencies
+└── Sensitive data
+
+⚠️ IMPORTANT: Never delete state file!
+✅ Always keep it secure (Git ignored)
+
+VISUAL DESCRIPTION:
+- Brain icon or database icon representing "memory"
+- State file shown as glowing document
+- Connections to cloud resources
+- Lock icon emphasizing security
+- Before/after showing what happens if deleted (chaos)
+
+===================================================================================
+SLIDE 12: KEY TERRAFORM COMMANDS
+===================================================================================
+Title: "Essential Terraform Commands"
+
+CONTENT:
+terraform init
+• Initialize project (first time setup)
+• Downloads providers
+
+terraform plan
+• Preview changes (dry run)
+• See what will be created/modified
+
+terraform apply
+• Actually create/update infrastructure
+• Makes changes real
+
+terraform destroy
+• Delete all resources
+• Clean up everything
+
+VISUAL DESCRIPTION:
+- Terminal window showing each command
+- Icons next to each:
+  - init: Download/setup icon
+  - plan: Eye/preview icon
+  - apply: Play/build icon
+  - destroy: Trash/delete icon
+- Flow arrows showing typical workflow
+
+===================================================================================
+SLIDE 13: TERRAFORM WORKFLOW IN OUR PROJECT
+===================================================================================
+Title: "Complete Deployment Flow"
+
+CONTENT:
+Step 1: Configure
+├── Set variables in terraform.tfvars
+└── Add secrets to .env
+
+Step 2: Terraform Provision
+├── terraform init
+├── terraform plan
+└── terraform apply → Creates Azure resources
+
+Step 3: Docker Build
+├── Build backend image
+└── Build frontend image
+
+Step 4: Deploy
+├── Push to Azure Container Registry
+└── Deploy to Container Instances
+
+VISUAL DESCRIPTION:
+- Linear flow diagram with 4 stages
+- Each stage has icon and substeps
+- Progress bar at top
+- Success checkmarks as each completes
+- Time estimates (5min, 3min, 10min, 5min)
+
+===================================================================================
+SLIDE 14: WHAT TERRAFORM CREATES FOR US
+===================================================================================
+Title: "Infrastructure Provisioned by Terraform"
+
+CONTENT:
+Azure Resources Created:
+✅ Resource Group
+   └── Container for all resources
+
+✅ Container Registry (ACR)
+   └── Private Docker registry
+
+✅ Unique Naming
+   └── Auto-generated IDs (no conflicts)
+
+All with one command: terraform apply
+
+VISUAL DESCRIPTION:
+- Azure cloud with resources appearing
+- Hierarchy diagram showing:
+  - Resource Group (box container)
+  - Nested: ACR (Docker logo)
+- Generated names shown: techquest-rg-85179
+- Animation style: Resources "building up"
+
+===================================================================================
+SLIDE 15: TERRAFORM USE CASES
+===================================================================================
+Title: "Real-World Terraform Use Cases"
+
+CONTENT:
+1. Multi-Environment Setup
+   • Same code for Dev/Staging/Prod
+   • Just change variables
+
+2. Disaster Recovery
+   • Recreate entire infrastructure instantly
+   • From code backup
+
+3. Testing Infrastructure
+   • Spin up test environment
+   • Test, then destroy
+
+4. Compliance & Audit
+   • Infrastructure changes tracked in Git
+   • Who changed what, when
+
+5. Cost Optimization
+   • Destroy dev environments overnight
+   • Recreate in morning
+
+VISUAL DESCRIPTION:
+- 5 boxes/cards, each with icon:
+  - Multi-env: Three identical servers (Dev/Stage/Prod)
+  - Disaster: Fire to Phoenix rising
+  - Testing: Lab/beaker icon
+  - Compliance: Checklist with audit stamp
+  - Cost: Money with down arrow
+- Professional infographic style
+
+===================================================================================
+SLIDE 16: BENEFITS OF TERRAFORM
+===================================================================================
+Title: "Why Teams Love Terraform"
+
+CONTENT:
+⚡ Speed: Deploy in minutes
+🔄 Repeatability: Same result every time
+📝 Documentation: Code is documentation
+🔒 Version Control: Track all changes
+🤝 Collaboration: Team works together
+💰 Cost Savings: Automate = save money
+🌍 Multi-Cloud: Works everywhere
+🔧 Easy Modifications: Change code, redeploy
+
+VISUAL DESCRIPTION:
+- 8 benefit cards in grid layout (2x4)
+- Each with emoji/icon and text
+- Green checkmark theme
+- Happy team members in background
+- Trending up graph showing improvement
+
+===================================================================================
+SLIDE 17: TERRAFORM IN ACTION - DEMO FLOW
+===================================================================================
+Title: "Watch Terraform Work"
+
+CONTENT:
+Command: terraform apply
+
+Output:
++ azurerm_resource_group.rg
++ azurerm_container_registry.acr
+
+Plan: 2 to add, 0 to change, 0 to destroy
+
+Do you want to perform these actions?
+  Enter "yes"
+
+Apply complete! Resources: 2 added
+
+⏱️ Total time: 45 seconds
+
+VISUAL DESCRIPTION:
+- Terminal screenshot (styled)
+- Green text showing success
+- Progress indicator
+- Resource icons appearing
+- Time counter at bottom
+- "Success!" message with checkmark
+
+===================================================================================
+SLIDE 18: EASY MANAGEMENT & CLEANUP
+===================================================================================
+Title: "Infrastructure Lifecycle Management"
+
+CONTENT:
+CREATE:
+terraform apply
+→ Resources appear in minutes
+
+UPDATE:
+Change code → terraform apply
+→ Only modifies what changed
+
+DESTROY:
+terraform destroy
+→ Everything deleted cleanly
+→ No orphaned resources
+
+All tracked, all automated, all safe.
+
+VISUAL DESCRIPTION:
+- Circular lifecycle diagram
+- Three stages: Create → Update → Destroy
+- Icons for each stage
+- Arrows showing flow
+- Azure portal showing resources appearing/disappearing
+- Clean, simple, circular design
+
+===================================================================================
+SLIDE 19: THE RESULTS - WHAT WE GET
+===================================================================================
+Title: "Final Output: Deployed Application"
+
+CONTENT:
+From One Command (terraform apply):
+
+✅ Infrastructure Created
+   • Resource Group: techquest-rg-85179
+   • Container Registry: techquestacr85179.azurecr.io
+
+✅ Containers Deployed
+   • Backend API: http://techquest-api-85179.northeurope.azurecontainer.io:5000
+   • Frontend Web: http://techquest-web-85179.northeurope.azurecontainer.io
+
+✅ Time Taken: ~5 minutes
+✅ Cost: ~$35/month
+✅ Fully Automated
+✅ Repeatable Anytime
+
+VISUAL DESCRIPTION:
+- Split screen:
+  - Left: Terminal with terraform apply
+  - Right: Live deployed application screenshot
+- Azure portal showing resources
+- Browser showing working app
+- Success metrics in corners (time, cost, status)
+- Green theme showing success
+
+===================================================================================
+SLIDE 20: CONCLUSION & KEY TAKEAWAYS
+===================================================================================
+Title: "Terraform: The Future of Infrastructure"
+
+KEY TAKEAWAYS:
+✨ Infrastructure as Code is the modern way
+✨ Terraform makes cloud automation simple
+✨ Write once, deploy anywhere
+✨ Version control your infrastructure
+✨ Save time, reduce errors, increase productivity
+✨ Essential skill for modern DevOps
+
+Next Steps:
+1. Learn Terraform basics
+2. Try small project
+3. Automate your infrastructure
+4. Share knowledge with team
+
+VISUAL DESCRIPTION:
+- Inspiring closing slide
+- Terraform logo
+- Cloud with success icons
+- Team celebrating
+- Modern tech background
+- Professional, motivational design
+- "Thank You" at bottom
+- Contact/GitHub link placeholder
+
+===================================================================================
+END OF PRESENTATION
+===================================================================================
+
+DESIGN GUIDELINES FOR ALL SLIDES:
+- Use consistent color scheme: Blue/Purple gradients with white text
+- Modern, clean, professional design
+- Icons and visuals for every point
+- Not too much text per slide (max 6-8 lines)
+- Use emojis sparingly but effectively
+- High-quality graphics and illustrations
+- Consistent font (modern sans-serif like Montserrat or Poppins)
+- Code snippets in monospace font with syntax highlighting
+- Maintain visual hierarchy (titles bigger, content readable)
+- Use animations subtly (fade-in, slide-in)
+- Keep it visually engaging but professional
+
+TARGET AUDIENCE: Technical team members, managers, stakeholders
+TONE: Professional, educational, inspiring
+DURATION: Approximately 20-25 minutes presentation
