@@ -54,20 +54,23 @@ $backend_name = "techquest-api-$unique_id"
 $frontend_name = "techquest-web-$unique_id"
 $backend_url = "http://${backend_name}.${region}.azurecontainer.io:${backend_port}"
 
+# Generate unique image tag
+$tag = Get-Date -Format "yyyyMMddHHmmss"
+
 # 3. Build & Push Images
-Write-Host "`n[3/5] Building & Pushing Docker Images..." -ForegroundColor Cyan
+Write-Host "`n[3/5] Building & Pushing Docker Images (Tag: $tag)..." -ForegroundColor Cyan
 Write-Host "Logging into ACR: $acr_login_server"
 docker login $acr_login_server -u $acr_username -p $acr_password
 
 Write-Host "Building Backend..."
 Set-Location "backend"
-docker build -t "${acr_login_server}/backend:latest" .
-docker push "${acr_login_server}/backend:latest"
+docker build -t "${acr_login_server}/backend:${tag}" .
+docker push "${acr_login_server}/backend:${tag}"
 
 Write-Host "Building Frontend (Binding API URL: $backend_url)..."
 Set-Location "../frontend"
-docker build --build-arg "VITE_API_URL=$backend_url" -t "${acr_login_server}/frontend:latest" .
-docker push "${acr_login_server}/frontend:latest"
+docker build --build-arg "VITE_API_URL=$backend_url" -t "${acr_login_server}/frontend:${tag}" .
+docker push "${acr_login_server}/frontend:${tag}"
 Set-Location ".."
 
 # 4. Generate & Deploy Backend YAML
@@ -80,7 +83,7 @@ properties:
   containers:
   - name: $backend_name
     properties:
-      image: $acr_login_server/backend:latest
+      image: $acr_login_server/backend:${tag}
       resources:
         requests:
           cpu: $backend_cpu
@@ -118,7 +121,7 @@ properties:
   containers:
   - name: $frontend_name
     properties:
-      image: $acr_login_server/frontend:latest
+      image: $acr_login_server/frontend:${tag}
       resources:
         requests:
           cpu: $frontend_cpu

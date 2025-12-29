@@ -11,7 +11,7 @@ import categoryKids from '../assets/images/kids_wear.png';
 import bannerWinter from '../assets/images/winter_collection.png';
 import bannerAccessories from '../assets/images/accessories.png';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5000') + '/api';
 
 const CATEGORIES = [
   { id: 'mens', name: "Men's Wear", image: categoryMens, description: 'Premium collection for men' },
