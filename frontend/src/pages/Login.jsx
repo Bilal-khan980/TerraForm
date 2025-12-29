@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import './Auth.css';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -30,7 +31,7 @@ const Login = () => {
 
       login(data.user);
       
-      if (data.user.isAdmin) {
+      if (data.user.role === 'admin') {
         navigate('/admin');
       } else {
         navigate('/');
@@ -43,70 +44,75 @@ const Login = () => {
   };
 
   return (
-    <div style={{
-      height: 'calc(100vh - 80px)', // Adjust for navbar
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      background: 'radial-gradient(circle at center, rgba(139, 92, 246, 0.1) 0%, rgba(5, 5, 5, 0) 70%)'
-    }}>
-      <div className="glass-panel" style={{ padding: '40px', width: '100%', maxWidth: '400px' }}>
-        <h2 className="gradient-text" style={{ fontSize: '2rem', marginBottom: '24px', textAlign: 'center' }}>
-          Welcome Back
-        </h2>
-        
-        {error && (
-          <div style={{ 
-            background: 'rgba(239, 68, 68, 0.2)', 
-            border: '1px solid rgba(239, 68, 68, 0.5)', 
-            color: '#fca5a5', 
-            padding: '12px', 
-            borderRadius: '8px',
-            marginBottom: '20px',
-            fontSize: '0.9rem'
-          }}>
-            {error}
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit}>
-          <div style={{ marginBottom: '16px' }}>
-            <label style={{ display: 'block', marginBottom: '8px', color: 'var(--text-secondary)' }}>Email</label>
-            <input
-              type="email"
-              className="input-field"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email"
-              required
-            />
+    <div className="auth-page">
+      <div className="auth-container">
+        <div className="auth-card">
+          <div className="auth-header">
+            <h2 className="auth-title">Welcome Back</h2>
+            <p className="auth-subtitle">Sign in to your account to continue shopping</p>
           </div>
           
-          <div style={{ marginBottom: '24px' }}>
-            <label style={{ display: 'block', marginBottom: '8px', color: 'var(--text-secondary)' }}>Password</label>
-            <input
-              type="password"
-              className="input-field"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter your password"
-              required
-            />
+          {error && (
+            <div className="auth-alert">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+              </svg>
+              {error}
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className="auth-form">
+            <div className="form-group">
+              <label htmlFor="email">Email Address</label>
+              <input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email"
+                required
+              />
+            </div>
+            
+            <div className="form-group">
+              <div className="label-row">
+                <label htmlFor="password">Password</label>
+                <a href="#" className="forgot-password">Forgot password?</a>
+              </div>
+              <input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter your password"
+                required
+              />
+            </div>
+
+            <button 
+              type="submit" 
+              className="btn btn-primary btn-block" 
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? (
+                <>
+                  <span className="spinner-small"></span>
+                  Signing in...
+                </>
+              ) : (
+                'Sign In'
+              )}
+            </button>
+          </form>
+
+          <div className="auth-footer">
+            <p>
+              Don't have an account? <Link to="/signup" className="auth-link">Create Account</Link>
+            </p>
           </div>
-
-          <button 
-            type="submit" 
-            className="btn-primary" 
-            style={{ width: '100%' }}
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? 'Logging in...' : 'Login'}
-          </button>
-        </form>
-
-        <p style={{ marginTop: '20px', textAlign: 'center', color: 'var(--text-secondary)' }}>
-          Don't have an account? <Link to="/signup" style={{ color: 'var(--accent-primary)', textDecoration: 'none' }}>Sign up</Link>
-        </p>
+        </div>
       </div>
     </div>
   );

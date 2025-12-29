@@ -50,7 +50,8 @@ router.post('/login', async (req, res) => {
           id: 'admin',
           name: 'Admin',
           email: ADMIN_EMAIL,
-          isAdmin: true
+          isAdmin: true,
+          role: 'admin'
         }
       });
     }

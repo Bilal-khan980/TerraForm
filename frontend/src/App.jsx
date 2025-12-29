@@ -1,4 +1,3 @@
-import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
@@ -6,21 +5,20 @@ import Admin from './pages/Admin';
 import Checkout from './pages/Checkout';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
-import CartDrawer from './components/CartDrawer';
 import { CartProvider } from './context/CartContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
 
 const ProtectedRoute = ({ children, adminOnly = false }) => {
   const { user, loading } = useAuth();
   
-  if (loading) return <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white' }}>Loading...</div>;
+  if (loading) return null; // Or a loading spinner
   
   if (!user) {
-    return <Navigate to="/login" />;
+    return <Navigate to="/login" replace />;
   }
   
-  if (adminOnly && !user.isAdmin) {
-    return <Navigate to="/" />;
+  if (adminOnly && user.role !== 'admin' && !user.isAdmin) {
+    return <Navigate to="/" replace />;
   }
   
   return children;
@@ -31,16 +29,18 @@ function App() {
     <Router>
       <AuthProvider>
         <CartProvider>
-          <div style={{ minHeight: '100vh', background: 'var(--bg-color)', color: 'white' }}>
+          <div className="app-container">
             <Navbar />
-            <CartDrawer />
             <Routes>
+              {/* Public Routes */}
+              <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
               
-              <Route path="/" element={
+              {/* Protected Routes */}
+              <Route path="/checkout" element={
                 <ProtectedRoute>
-                  <Home />
+                  <Checkout />
                 </ProtectedRoute>
               } />
               
@@ -50,11 +50,8 @@ function App() {
                 </ProtectedRoute>
               } />
               
-              <Route path="/checkout" element={
-                <ProtectedRoute>
-                  <Checkout />
-                </ProtectedRoute>
-              } />
+              {/* Catch all */}
+              <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </div>
         </CartProvider>

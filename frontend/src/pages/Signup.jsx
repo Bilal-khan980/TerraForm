@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import './Auth.css';
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -45,85 +46,87 @@ const Signup = () => {
   };
 
   return (
-    <div style={{
-      height: 'calc(100vh - 80px)', // Adjust for navbar
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      background: 'radial-gradient(circle at center, rgba(236, 72, 153, 0.1) 0%, rgba(5, 5, 5, 0) 70%)'
-    }}>
-      <div className="glass-panel" style={{ padding: '40px', width: '100%', maxWidth: '400px' }}>
-        <h2 className="gradient-text" style={{ fontSize: '2rem', marginBottom: '24px', textAlign: 'center' }}>
-          Create Account
-        </h2>
-        
-        {error && (
-          <div style={{ 
-            background: 'rgba(239, 68, 68, 0.2)', 
-            border: '1px solid rgba(239, 68, 68, 0.5)', 
-            color: '#fca5a5', 
-            padding: '12px', 
-            borderRadius: '8px',
-            marginBottom: '20px',
-            fontSize: '0.9rem'
-          }}>
-            {error}
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit}>
-          <div style={{ marginBottom: '16px' }}>
-            <label style={{ display: 'block', marginBottom: '8px', color: 'var(--text-secondary)' }}>Name</label>
-            <input
-              type="text"
-              name="name"
-              className="input-field"
-              value={formData.name}
-              onChange={handleChange}
-              placeholder="Enter your name"
-              required
-            />
-          </div>
-
-          <div style={{ marginBottom: '16px' }}>
-            <label style={{ display: 'block', marginBottom: '8px', color: 'var(--text-secondary)' }}>Email</label>
-            <input
-              type="email"
-              name="email"
-              className="input-field"
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="Enter your email"
-              required
-            />
+    <div className="auth-page">
+      <div className="auth-container">
+        <div className="auth-card">
+          <div className="auth-header">
+            <h2 className="auth-title">Create Account</h2>
+            <p className="auth-subtitle">Join us to access exclusive collections and offers</p>
           </div>
           
-          <div style={{ marginBottom: '24px' }}>
-            <label style={{ display: 'block', marginBottom: '8px', color: 'var(--text-secondary)' }}>Password</label>
-            <input
-              type="password"
-              name="password"
-              className="input-field"
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="Create a password"
-              required
-            />
+          {error && (
+            <div className="auth-alert">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+              </svg>
+              {error}
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className="auth-form">
+            <div className="form-group">
+              <label htmlFor="name">Full Name</label>
+              <input
+                id="name"
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                placeholder="Enter your name"
+                required
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="email">Email Address</label>
+              <input
+                id="email"
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="Enter your email"
+                required
+              />
+            </div>
+            
+            <div className="form-group">
+              <label htmlFor="password">Password</label>
+              <input
+                id="password"
+                type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="Create a strong password"
+                required
+              />
+            </div>
+
+            <button 
+              type="submit" 
+              className="btn btn-primary btn-block" 
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? (
+                <>
+                  <span className="spinner-small"></span>
+                  Creating Account...
+                </>
+              ) : (
+                'Sign Up'
+              )}
+            </button>
+          </form>
+
+          <div className="auth-footer">
+            <p>
+              Already have an account? <Link to="/login" className="auth-link">Sign In</Link>
+            </p>
           </div>
-
-          <button 
-            type="submit" 
-            className="btn-primary" 
-            style={{ width: '100%' }}
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? 'Creating Account...' : 'Sign Up'}
-          </button>
-        </form>
-
-        <p style={{ marginTop: '20px', textAlign: 'center', color: 'var(--text-secondary)' }}>
-          Already have an account? <Link to="/login" style={{ color: 'var(--accent-primary)', textDecoration: 'none' }}>Login</Link>
-        </p>
+        </div>
       </div>
     </div>
   );

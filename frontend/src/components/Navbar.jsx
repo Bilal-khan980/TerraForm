@@ -1,110 +1,101 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ShoppingBag, Settings, Store } from 'lucide-react';
-import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
+import { useCart } from '../context/CartContext';
+import './Navbar.css';
 
 const Navbar = () => {
-  const { setIsCartOpen, cartCount } = useCart();
+  const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const { cart, setIsCartOpen } = useCart();
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const isAdmin = user?.role === 'admin' || user?.isAdmin;
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const handleLogout = () => {
     logout();
     navigate('/login');
   };
 
-  return (
-    <nav style={{
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      right: 0,
-      zIndex: 100,
-      padding: '20px 0',
-      background: 'rgba(5, 5, 5, 0.8)',
-      backdropFilter: 'blur(12px)',
-      borderBottom: '1px solid rgba(255, 255, 255, 0.05)'
-    }}>
-      <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Link to="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <div style={{
-            width: '40px',
-            height: '40px',
-            background: 'var(--gradient-main)',
-            borderRadius: '10px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
-          }}>
-            <Store color="white" size={24} />
-          </div>
-          <h1 style={{ fontSize: '1.5rem', fontWeight: 700, color: 'white' }}>LuxeStore</h1>
-        </Link>
+  const cartItemsCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
-        {user ? (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-            <span style={{ color: 'var(--text-secondary)' }}>Welcome, {user.name}</span>
-            
-            {user.isAdmin && (
-              <Link to="/admin" style={{ color: 'var(--text-secondary)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '5px' }}>
-                <Settings size={20} />
-                <span>Admin</span>
-              </Link>
+  return (
+    <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
+      <div className="container">
+        <div className="navbar-content">
+          {/* Logo */}
+          <Link to="/" className="navbar-logo">
+            <span className="logo-text">OUTFITTERS</span>
+            <span className="logo-tagline">Premium Fashion</span>
+          </Link>
+
+          {/* Desktop Navigation */}
+          <div className="navbar-nav desktop-nav">
+            <Link to="/" className="nav-link">Home</Link>
+            <Link to="/#categories" className="nav-link">Categories</Link>
+            <Link to="/#new-arrivals" className="nav-link">New Arrivals</Link>
+            {isAdmin && <Link to="/admin" className="nav-link admin-link">Admin Panel</Link>}
+          </div>
+
+          {/* Right Side Actions */}
+          <div className="navbar-actions">
+            {user ? (
+              <>
+                <div className="user-info">
+                  <span className="user-name">Hi, {user.name}</span>
+                </div>
+                <button onClick={handleLogout} className="btn-logout" aria-label="Logout">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                    <polyline points="16 17 21 12 16 7"></polyline>
+                    <line x1="21" y1="12" x2="9" y2="12"></line>
+                  </svg>
+                </button>
+              </>
+            ) : (
+              <Link to="/login" className="btn btn-outline btn-login">Login</Link>
             )}
             
-            {!user.isAdmin && (
-               <button 
-               onClick={() => setIsCartOpen(true)}
-               style={{ 
-                 background: 'rgba(255, 255, 255, 0.1)', 
-                 padding: '10px', 
-                 borderRadius: '12px',
-                 position: 'relative',
-                 color: 'white'
-               }}
-             >
-               <ShoppingBag size={24} />
-               {cartCount > 0 && (
-                 <span style={{
-                   position: 'absolute',
-                   top: '-5px',
-                   right: '-5px',
-                   background: 'var(--accent-secondary)',
-                   width: '18px',
-                   height: '18px',
-                   borderRadius: '50%',
-                   fontSize: '11px',
-                   display: 'flex',
-                   alignItems: 'center',
-                   justifyContent: 'center',
-                   fontWeight: 'bold'
-                 }}>
-                   {cartCount}
-                 </span>
-               )}
-             </button>
-            )}
+            <button onClick={() => setIsCartOpen(true)} className="cart-button" aria-label="Open Cart">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="9" cy="21" r="1"></circle>
+                <circle cx="20" cy="21" r="1"></circle>
+                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+              </svg>
+              {cartItemsCount > 0 && (
+                <span className="cart-badge">{cartItemsCount}</span>
+              )}
+            </button>
 
             <button 
-              onClick={handleLogout}
-              style={{
-                background: 'transparent',
-                color: 'var(--text-secondary)',
-                fontSize: '0.9rem',
-                padding: '8px 16px',
-                border: '1px solid var(--border-color)'
-              }}
+              className="menu-toggle"
+              onClick={() => setMenuOpen(!menuOpen)}
+              aria-label="Toggle menu"
             >
-              Logout
+              <span></span>
+              <span></span>
+              <span></span>
             </button>
           </div>
-        ) : (
-          <div style={{ display: 'flex', gap: '16px' }}>
-            <Link to="/login" style={{ color: 'white', textDecoration: 'none', fontWeight: 600 }}>Login</Link>
-          </div>
-        )}
+        </div>
+
+        {/* Mobile Menu */}
+        <div className={`mobile-menu ${menuOpen ? 'open' : ''}`}>
+          <Link to="/" className="mobile-nav-link" onClick={() => setMenuOpen(false)}>Home</Link>
+          <Link to="/#categories" className="mobile-nav-link" onClick={() => setMenuOpen(false)}>Categories</Link>
+          <Link to="/#new-arrivals" className="mobile-nav-link" onClick={() => setMenuOpen(false)}>New Arrivals</Link>
+          {isAdmin && <Link to="/admin" className="mobile-nav-link admin-link" onClick={() => setMenuOpen(false)}>Admin Panel</Link>}
+          {!user && <Link to="/login" className="mobile-nav-link" onClick={() => setMenuOpen(false)}>Login</Link>}
+        </div>
       </div>
     </nav>
   );
